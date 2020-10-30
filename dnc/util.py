@@ -72,10 +72,11 @@ def θ(a, b, dimA=2, dimB=2, normBy=2):
   Returns:
       Tensor -- Batchwise cosine distance (b * r * m)
   """
+  w = a.detach().cpu().numpy().shape[-1]
   a_norm = T.norm(a, normBy, dimA, keepdim=True).expand_as(a) + δ
   b_norm = T.norm(b, normBy, dimB, keepdim=True).expand_as(b) + δ
 
-  x = T.bmm(a, b.transpose(1, 2)).transpose(1, 2) / (
+  x = w * T.bmm(a, b.transpose(1, 2)).transpose(1, 2) / (
       T.bmm(a_norm, b_norm.transpose(1, 2)).transpose(1, 2) + δ)
   # apply_dict(locals())
   return x
